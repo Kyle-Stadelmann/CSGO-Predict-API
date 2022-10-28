@@ -4,7 +4,7 @@ export interface League {
 	id: Id;
 	tournamentId: Id;
 	finished: boolean;
-	days: Map<number, LeagueDay>; // day number -> LeagueDay
+	daysMap: Map<number, LeagueDay>; // day number -> LeagueDay
 	userScores: Map<Id, number>; // userId -> total score so far
 }
 
@@ -18,10 +18,10 @@ export interface UserLeagueDayResults {
 	userId: Id;
 	dayNumber: number;
 	dayScore: number;
-	predictions: Map<Id, PredictionResults>; // matchId -> PredictionResults
+	predictions: Map<Id, PredictionResult>; // matchId -> PredictionResults
 }
 
-export interface PredictionResults {
+export interface PredictionResult {
 	matchId: Id;
 	predictionTeamId: Id;
 	wasCorrect: boolean;

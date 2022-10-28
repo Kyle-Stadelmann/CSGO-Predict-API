@@ -23,10 +23,10 @@ export interface UserLeagueDayResults {
 	userId: Id;
 	dayNumber: number;
 	dayScore: number;
-	predictions: PredictionResults[];
+	predictions: PredictionResult[];
 }
 
-export interface PredictionResults {
+export interface PredictionResult {
 	matchId: Id;
 	predictionTeamId: Id;
 	wasCorrect: boolean;

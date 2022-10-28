@@ -1,8 +1,8 @@
 import { Id } from "./id.js";
 
 export interface Country {
-    name: string;
-    code: string;
+	name: string;
+	code: string;
 }
 
 export interface Team {

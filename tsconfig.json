@@ -6,11 +6,10 @@
         "experimentalDecorators": true,
 		"module": "ESNext",
 		"target": "ESNext",
-		"outDir": "./build",
+		"outDir": "./dist",
 
 		"strict": true,
 		"esModuleInterop": true,
-		"skipLibCheck": true,
 		"forceConsistentCasingInFileNames": true,
 		"moduleResolution": "node",
 		"declaration": true
