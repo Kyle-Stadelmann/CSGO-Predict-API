@@ -75,7 +75,7 @@ export async function authPredictionUser(token: string): Promise<User> {
 		authResponse = await axios<User>({
 			method: "post",
 			url: `${protocol}://${address}:${port}/auth`,
-			data: token,
+			data: {"token": token},
 			responseType: "json"
 		});
 	} catch (e) {
