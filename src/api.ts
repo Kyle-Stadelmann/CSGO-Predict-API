@@ -6,6 +6,7 @@ import { Id } from "./types/id.js";
 import { throwError } from "./util.js";
 import { DayPredictions } from "./types/prediction.js";
 import { Agent } from "https";
+import { User } from "./types/user.js";
 
 const port = 3846;
 
@@ -76,6 +77,24 @@ export async function submitDayPredictions(dayPreds: DayPredictions) {
 	}
 }
 
+export async function authPredictionUser(token: string): Promise<User> {
+	const authResponse = await axios<User>({
+		method: "post",
+		url: `https://localhost:${port}/auth`,
+		data: token,
+		responseType: "json",
+		httpsAgent: httpsAgent,
+	});
+
+	if (authResponse.status !== 200 || !authResponse.data) {
+		// If non-200 status code, body will be string error message
+		throwError(authResponse.data, authResponse.status, authResponse.statusText);
+	}
+
+	return authResponse.data;
+}
+
+
 function enrichLeague(league: ApiLeague.League): EnrichedLeague.League {
 	const ldm = getLeagueDaysMap(league.leagueDays);
 	const usm = getUserTotalScoresMap(league.userScores);
@@ -91,8 +110,8 @@ function enrichLeague(league: ApiLeague.League): EnrichedLeague.League {
 	return enrichedLeague;
 }
 
-function getUserTotalScoresMap(userScores: ApiLeague.UserScore[]): Map<Id, number> {
-	const usm = new Map<Id, number>();
+function getUserTotalScoresMap(userScores: ApiLeague.UserScore[]): Map<string, number> {
+	const usm = new Map<string, number>();
 
 	userScores.forEach((us) => {
 		usm.set(us.userId, us.score);
@@ -118,8 +137,8 @@ function getPredictionsMap(predictions: ApiLeague.PredictionResult[]): Map<Id, E
 
 function getUserDayScoresMap(
 	userDayScores: ApiLeague.UserLeagueDayResults[]
-): Map<Id, EnrichedLeague.UserLeagueDayResults> {
-	const usm = new Map<Id, EnrichedLeague.UserLeagueDayResults>();
+): Map<string, EnrichedLeague.UserLeagueDayResults> {
+	const usm = new Map<string, EnrichedLeague.UserLeagueDayResults>();
 
 	userDayScores.forEach((apiUserDayScore) => {
 		const userDayScore: EnrichedLeague.UserLeagueDayResults = {

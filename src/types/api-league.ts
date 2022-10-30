@@ -9,7 +9,7 @@ export interface League {
 }
 
 export interface UserScore {
-	userId: Id;
+	userId: string;
 	score: number;
 }
 
@@ -20,7 +20,7 @@ export interface LeagueDay {
 }
 
 export interface UserLeagueDayResults {
-	userId: Id;
+	userId: string;
 	dayNumber: number;
 	dayScore: number;
 	predictions: PredictionResult[];

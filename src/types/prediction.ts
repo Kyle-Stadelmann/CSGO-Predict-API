@@ -1,7 +1,7 @@
 import { Id } from "./id.js";
 
 export interface DayPredictions {
-	userId: Id;
+	userId: string;
 	date: Date;
 	leagueId: Id;
 	predictions: Prediction[];
