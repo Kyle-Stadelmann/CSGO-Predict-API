@@ -1,3 +1,5 @@
-export function throwError(msg: any, statusCode: number, statusText: string) {
-	throw new Error(`${statusCode}:${statusText}\n${msg as string}`);
+export function generateError(e: any): Error {
+	const { statusCode, statusText, data } = e;
+
+	return new Error(`${statusCode}:${statusText}\n${data}`);
 }

@@ -1,9 +1,9 @@
-import axios from "axios";
+import axios, { Axios, AxiosResponse } from "axios";
 import * as ApiLeague from "./types/api-league.js";
 import * as EnrichedLeague from "./types/league.js";
 import { Match, MatchResult } from "./types/match-result.js";
 import { Id } from "./types/id.js";
-import { throwError } from "./util.js";
+import { generateError } from "./util.js";
 import { DayPredictions } from "./types/prediction.js";
 import { Agent } from "https";
 import { User } from "./types/user.js";
@@ -15,80 +15,79 @@ const httpsAgent = new Agent({
 });
 
 export async function getLeagueById(leagueId: Id): Promise<EnrichedLeague.League> {
-	const leagueResponse = await axios<ApiLeague.League>({
-		method: "get",
-		url: `https://localhost:${port}/league/id/${leagueId}`,
-		responseType: "json",
-		httpsAgent: httpsAgent,
-	});
-
-	if (leagueResponse.status !== 200) {
-		// If non-200 status code, body will be string error message
-		throwError(leagueResponse.data, leagueResponse.status, leagueResponse.statusText);
+	let leagueResponse: AxiosResponse<ApiLeague.League>;
+	try {
+		leagueResponse = await axios<ApiLeague.League>({
+			method: "get",
+			url: `https://localhost:${port}/league/id/${leagueId}`,
+			responseType: "json",
+			httpsAgent: httpsAgent,
+		});
+	} catch (e) {
+		throw generateError(e);
 	}
 
 	return enrichLeague(leagueResponse.data);
 }
 
 export async function getCurrentDayMatches(tournamentId: Id): Promise<Match[]> {
-	const leagueResponse = await axios<Match[]>({
-		method: "get",
-		url: `https://localhost:${port}/match/tournamentId/${tournamentId}`,
-		responseType: "json",
-		httpsAgent: httpsAgent,
-	});
-
-	if (leagueResponse.status !== 200) {
-		// If non-200 status code, body will be string error message
-		throwError(leagueResponse.data, leagueResponse.status, leagueResponse.statusText);
+	let currentDayResponse: AxiosResponse<Match[]>;
+	try {
+		currentDayResponse = await axios<Match[]>({
+			method: "get",
+			url: `https://localhost:${port}/match/tournamentId/${tournamentId}`,
+			responseType: "json",
+			httpsAgent: httpsAgent,
+		});
+	} catch (e) {
+		throw generateError(e);
 	}
 
-	return leagueResponse.data;
+	return currentDayResponse.data;
 }
 
 export async function getResultsFromDay(tournamentId: Id, day: number): Promise<MatchResult[]> {
-	const leagueResponse = await axios<MatchResult[]>({
-		method: "get",
-		url: `https://localhost:${port}/match/results/tournamentId/${tournamentId}/day/${day}`,
-		responseType: "json",
-		httpsAgent: httpsAgent,
-	});
-
-	if (leagueResponse.status !== 200) {
-		// If non-200 status code, body will be string error message
-		throwError(leagueResponse.data, leagueResponse.status, leagueResponse.statusText);
+	let resultsResponse: AxiosResponse<MatchResult[]>;
+	try {
+		resultsResponse = await axios<MatchResult[]>({
+			method: "get",
+			url: `https://localhost:${port}/match/results/tournamentId/${tournamentId}/day/${day}`,
+			responseType: "json",
+			httpsAgent: httpsAgent,
+		});
+	} catch (e) {
+		throw generateError(e);
 	}
 
-	return leagueResponse.data;
+	return resultsResponse.data;
 }
 
 export async function submitDayPredictions(dayPreds: DayPredictions) {
-	const leagueResponse = await axios<DayPredictions>({
-		method: "put",
-		url: `https://localhost:${port}/match/predictions`,
-		data: dayPreds,
-		responseType: "json",
-		httpsAgent: httpsAgent,
-	});
-
-	if (leagueResponse.status !== 200) {
-		// If non-200 status code, body will be string error message
-		throwError(leagueResponse.data, leagueResponse.status, leagueResponse.statusText);
+	try {
+		await axios<DayPredictions>({
+			method: "put",
+			url: `https://localhost:${port}/match/predictions`,
+			data: dayPreds,
+			responseType: "json",
+			httpsAgent: httpsAgent,
+		});
+	} catch (e) {
+		throw generateError(e);
 	}
 }
 
 export async function authPredictionUser(token: string): Promise<User> {
-	const authResponse = await axios<User>({
-		method: "post",
-		url: `https://localhost:${port}/auth`,
-		data: token,
-		responseType: "json",
-		httpsAgent: httpsAgent,
-	});
-
-	if (authResponse.status !== 200 || !authResponse.data) {
-		// If non-200 status code, body will be string error message
-		throwError(authResponse.data, authResponse.status, authResponse.statusText);
+	let authResponse: AxiosResponse<User>;
+	try {
+		authResponse = await axios<User>({
+			method: "post",
+			url: `https://localhost:${port}/auth`,
+			data: token,
+			responseType: "json",
+			httpsAgent: httpsAgent,
+		});
+	} catch (e) {
+		throw generateError(e);
 	}
 
 	return authResponse.data;
