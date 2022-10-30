@@ -1,27 +1,23 @@
-import axios, { Axios, AxiosResponse } from "axios";
+import axios, { AxiosResponse } from "axios";
 import * as ApiLeague from "./types/api-league.js";
 import * as EnrichedLeague from "./types/league.js";
 import { Match, MatchResult } from "./types/match-result.js";
 import { Id } from "./types/id.js";
 import { generateError } from "./util.js";
 import { DayPredictions } from "./types/prediction.js";
-import { Agent } from "https";
 import { User } from "./types/user.js";
 
+const protocol = "http";
+const address = "localhost";
 const port = 3846;
-
-const httpsAgent = new Agent({
-	rejectUnauthorized: false,
-});
 
 export async function getLeagueById(leagueId: Id): Promise<EnrichedLeague.League> {
 	let leagueResponse: AxiosResponse<ApiLeague.League>;
 	try {
 		leagueResponse = await axios<ApiLeague.League>({
 			method: "get",
-			url: `https://localhost:${port}/league/id/${leagueId}`,
-			responseType: "json",
-			httpsAgent: httpsAgent,
+			url: `${protocol}://${address}:${port}/league/id/${leagueId}`,
+			responseType: "json"
 		});
 	} catch (e) {
 		throw generateError(e);
@@ -35,9 +31,8 @@ export async function getCurrentDayMatches(tournamentId: Id): Promise<Match[]> {
 	try {
 		currentDayResponse = await axios<Match[]>({
 			method: "get",
-			url: `https://localhost:${port}/match/tournamentId/${tournamentId}`,
-			responseType: "json",
-			httpsAgent: httpsAgent,
+			url: `${protocol}://${address}:${port}/match/tournamentId/${tournamentId}`,
+			responseType: "json"
 		});
 	} catch (e) {
 		throw generateError(e);
@@ -51,9 +46,8 @@ export async function getResultsFromDay(tournamentId: Id, day: number): Promise<
 	try {
 		resultsResponse = await axios<MatchResult[]>({
 			method: "get",
-			url: `https://localhost:${port}/match/results/tournamentId/${tournamentId}/day/${day}`,
-			responseType: "json",
-			httpsAgent: httpsAgent,
+			url: `${protocol}://${address}:${port}/match/results/tournamentId/${tournamentId}/day/${day}`,
+			responseType: "json"
 		});
 	} catch (e) {
 		throw generateError(e);
@@ -66,10 +60,9 @@ export async function submitDayPredictions(dayPreds: DayPredictions) {
 	try {
 		await axios<DayPredictions>({
 			method: "put",
-			url: `https://localhost:${port}/match/predictions`,
+			url: `${protocol}://${address}:${port}/match/predictions`,
 			data: dayPreds,
-			responseType: "json",
-			httpsAgent: httpsAgent,
+			responseType: "json"
 		});
 	} catch (e) {
 		throw generateError(e);
@@ -81,10 +74,9 @@ export async function authPredictionUser(token: string): Promise<User> {
 	try {
 		authResponse = await axios<User>({
 			method: "post",
-			url: `https://localhost:${port}/auth`,
+			url: `${protocol}://${address}:${port}/auth`,
 			data: token,
-			responseType: "json",
-			httpsAgent: httpsAgent,
+			responseType: "json"
 		});
 	} catch (e) {
 		throw generateError(e);
