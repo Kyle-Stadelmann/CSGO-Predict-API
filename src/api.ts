@@ -6,9 +6,8 @@ import { Id } from "./types/id.js";
 import { generateError } from "./util.js";
 import { DayPredictions } from "./types/prediction.js";
 import { User } from "./types/user.js";
-import config from "config";
 
-const uri = config.get("BACKEND_SERVER_URI");
+const uri = process.env.REACT_APP_BACKEND_URI;
 
 export async function getLeagueById(leagueId: Id): Promise<EnrichedLeague.League> {
 	let leagueResponse: AxiosResponse<ApiLeague.League>;
