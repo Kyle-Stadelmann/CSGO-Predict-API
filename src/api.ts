@@ -6,17 +6,16 @@ import { Id } from "./types/id.js";
 import { generateError } from "./util.js";
 import { DayPredictions } from "./types/prediction.js";
 import { User } from "./types/user.js";
+import config from "config";
 
-const protocol = "https";
-const address = "75.80.178.204";
-const port = 3846;
+const uri = config.get("BACKEND_SERVER_URI");
 
 export async function getLeagueById(leagueId: Id): Promise<EnrichedLeague.League> {
 	let leagueResponse: AxiosResponse<ApiLeague.League>;
 	try {
 		leagueResponse = await axios<ApiLeague.League>({
 			method: "get",
-			url: `${protocol}://${address}:${port}/league/id/${leagueId}`,
+			url: `${uri}/league/id/${leagueId}`,
 			responseType: "json"
 		});
 	} catch (e) {
@@ -31,7 +30,7 @@ export async function getCurrentDayMatches(tournamentId: Id): Promise<Match[]> {
 	try {
 		currentDayResponse = await axios<Match[]>({
 			method: "get",
-			url: `${protocol}://${address}:${port}/match/tournamentId/${tournamentId}`,
+			url: `${uri}/match/tournamentId/${tournamentId}`,
 			responseType: "json"
 		});
 	} catch (e) {
@@ -46,7 +45,7 @@ export async function getResultsFromDay(tournamentId: Id, day: number): Promise<
 	try {
 		resultsResponse = await axios<MatchResult[]>({
 			method: "get",
-			url: `${protocol}://${address}:${port}/match/results/tournamentId/${tournamentId}/day/${day}`,
+			url: `${uri}/match/results/tournamentId/${tournamentId}/day/${day}`,
 			responseType: "json"
 		});
 	} catch (e) {
@@ -60,7 +59,7 @@ export async function submitDayPredictions(dayPreds: DayPredictions) {
 	try {
 		await axios<DayPredictions>({
 			method: "put",
-			url: `${protocol}://${address}:${port}/match/predictions`,
+			url: `${uri}/match/predictions`,
 			data: dayPreds,
 			responseType: "json"
 		});
@@ -74,7 +73,7 @@ export async function authPredictionUser(token: string): Promise<User> {
 	try {
 		authResponse = await axios<User>({
 			method: "post",
-			url: `${protocol}://${address}:${port}/auth/`,
+			url: `${uri}/auth/`,
 			responseType: "json",
 			data: {"token": token}
 		});
