@@ -8,7 +8,7 @@ import { DayPredictions } from "./types/prediction.js";
 import { User } from "./types/user.js";
 
 const protocol = "https";
-const address = "localhost";
+const address = "75.80.178.204";
 const port = 3846;
 
 export async function getLeagueById(leagueId: Id): Promise<EnrichedLeague.League> {
