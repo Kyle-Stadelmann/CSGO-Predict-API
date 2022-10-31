@@ -7,7 +7,7 @@ import { generateError } from "./util.js";
 import { DayPredictions } from "./types/prediction.js";
 import { User } from "./types/user.js";
 
-const protocol = "http";
+const protocol = "https";
 const address = "localhost";
 const port = 3846;
 
