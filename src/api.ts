@@ -15,7 +15,8 @@ export async function getLeagueById(leagueId: Id): Promise<EnrichedLeague.League
 		leagueResponse = await axios<ApiLeague.League>({
 			method: "get",
 			url: `${uri}/league/id/${leagueId}`,
-			responseType: "json"
+			responseType: "json",
+			withCredentials: true
 		});
 	} catch (e) {
 		throw generateError(e);
@@ -30,7 +31,8 @@ export async function getCurrentDayMatches(tournamentId: Id): Promise<Match[]> {
 		currentDayResponse = await axios<Match[]>({
 			method: "get",
 			url: `${uri}/match/tournamentId/${tournamentId}`,
-			responseType: "json"
+			responseType: "json",
+			withCredentials: true
 		});
 	} catch (e) {
 		throw generateError(e);
@@ -45,7 +47,8 @@ export async function getResultsFromDay(tournamentId: Id, day: number): Promise<
 		resultsResponse = await axios<MatchResult[]>({
 			method: "get",
 			url: `${uri}/match/results/tournamentId/${tournamentId}/day/${day}`,
-			responseType: "json"
+			responseType: "json",
+			withCredentials: true
 		});
 	} catch (e) {
 		throw generateError(e);
@@ -60,7 +63,8 @@ export async function submitDayPredictions(dayPreds: DayPredictions) {
 			method: "put",
 			url: `${uri}/match/predictions`,
 			data: dayPreds,
-			responseType: "json"
+			responseType: "json",
+			withCredentials: true
 		});
 	} catch (e) {
 		throw generateError(e);
@@ -74,7 +78,8 @@ export async function authPredictionUser(token: string): Promise<User> {
 			method: "post",
 			url: `${uri}/auth/`,
 			responseType: "json",
-			data: {"token": token}
+			data: {"token": token},
+			withCredentials: true
 		});
 	} catch (e) {
 		throw generateError(e);
