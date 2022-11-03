@@ -6,13 +6,8 @@ import { Id } from "./types/id.js";
 import { generateError } from "./util.js";
 import { DayPredictions } from "./types/prediction.js";
 import { User } from "./types/user.js";
-import * as https from "https";
 
 const uri = process.env.REACT_APP_BACKEND_URI;
-
-const httpsAgent = new https.Agent({
-	rejectUnauthorized: false,
-});
 
 export async function getLeagueById(leagueId: Id): Promise<EnrichedLeague.League> {
 	let leagueResponse: AxiosResponse<ApiLeague.League>;
@@ -21,8 +16,7 @@ export async function getLeagueById(leagueId: Id): Promise<EnrichedLeague.League
 			method: "get",
 			url: `${uri}/league/id/${leagueId}`,
 			responseType: "json",
-			withCredentials: true,
-			httpsAgent: httpsAgent
+			withCredentials: true
 		});
 	} catch (e) {
 		throw generateError(e);
@@ -38,8 +32,7 @@ export async function getCurrentDayMatches(tournamentId: Id): Promise<Match[]> {
 			method: "get",
 			url: `${uri}/match/tournamentId/${tournamentId}`,
 			responseType: "json",
-			withCredentials: true,
-			httpsAgent: httpsAgent
+			withCredentials: true
 		});
 	} catch (e) {
 		throw generateError(e);
@@ -55,8 +48,7 @@ export async function getResultsFromDay(tournamentId: Id, day: number): Promise<
 			method: "get",
 			url: `${uri}/match/results/tournamentId/${tournamentId}/day/${day}`,
 			responseType: "json",
-			withCredentials: true,
-			httpsAgent: httpsAgent
+			withCredentials: true
 		});
 	} catch (e) {
 		throw generateError(e);
@@ -72,8 +64,7 @@ export async function submitDayPredictions(dayPreds: DayPredictions) {
 			url: `${uri}/match/predictions`,
 			data: dayPreds,
 			responseType: "json",
-			withCredentials: true,
-			httpsAgent: httpsAgent
+			withCredentials: true
 		});
 	} catch (e) {
 		throw generateError(e);
@@ -88,8 +79,7 @@ export async function authPredictionUser(token: string): Promise<User> {
 			url: `${uri}/auth/`,
 			responseType: "json",
 			data: {"token": token},
-			withCredentials: true,
-			httpsAgent: httpsAgent
+			withCredentials: true
 		});
 	} catch (e) {
 		throw generateError(e);
