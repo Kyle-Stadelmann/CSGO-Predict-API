@@ -88,6 +88,21 @@ export async function authPredictionUser(token: string): Promise<User> {
 	return authResponse.data;
 }
 
+export async function getDayPredictions(userId: string, leagueId: Id) {
+	let dayPredsResponse: AxiosResponse<DayPredictions>;
+	try {
+		dayPredsResponse = await axios<DayPredictions>({
+			method: "get",
+			url: `${uri}/match/predictions/userId/${userId}/leagueId/${leagueId}`,
+			responseType: "json",
+			withCredentials: true
+		});
+	} catch (e) {
+		throw generateError(e);
+	}
+
+	return dayPredsResponse.data;
+}
 
 function enrichLeague(league: ApiLeague.League): EnrichedLeague.League {
 	const ldm = getLeagueDaysMap(league.leagueDays);
