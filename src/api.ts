@@ -25,12 +25,12 @@ export async function getLeagueById(leagueId: Id): Promise<EnrichedLeague.League
 	return enrichLeague(leagueResponse.data);
 }
 
-export async function getCurrentDayMatches(tournamentId: Id): Promise<Match[]> {
+export async function getCurrentDayMatches(leagueId: Id): Promise<Match[]> {
 	let currentDayResponse: AxiosResponse<Match[]>;
 	try {
 		currentDayResponse = await axios<Match[]>({
 			method: "get",
-			url: `${uri}/match/tournamentId/${tournamentId}`,
+			url: `${uri}/match/leagueId/${leagueId}`,
 			responseType: "json",
 			withCredentials: true
 		});
@@ -41,12 +41,12 @@ export async function getCurrentDayMatches(tournamentId: Id): Promise<Match[]> {
 	return currentDayResponse.data;
 }
 
-export async function getResultsFromDay(tournamentId: Id, day: number): Promise<MatchResult[]> {
+export async function getResultsFromDay(leagueId: Id, day: number): Promise<MatchResult[]> {
 	let resultsResponse: AxiosResponse<MatchResult[]>;
 	try {
 		resultsResponse = await axios<MatchResult[]>({
 			method: "get",
-			url: `${uri}/match/results/tournamentId/${tournamentId}/day/${day}`,
+			url: `${uri}/match/results/leagueId/${leagueId}/day/${day}`,
 			responseType: "json",
 			withCredentials: true
 		});
