@@ -6,6 +6,7 @@ import { Id } from "./types/id.js";
 import { generateError } from "./util.js";
 import { DayPredictions } from "./types/prediction.js";
 import { User } from "./types/user.js";
+import { PlayoffPredictions } from "./types/playoff-prediction.js";
 
 const uri = process.env.REACT_APP_BACKEND_URI;
 
@@ -174,4 +175,34 @@ function getLeagueDaysMap(leagueDays: ApiLeague.LeagueDay[]): Map<number, Enrich
 	});
 
 	return ldm;
+}
+
+export async function getPlayoffPredictions(userId: Id, leagueId: Id) {
+    let playoffPredsResponse: AxiosResponse<PlayoffPredictions>;
+	try {
+		playoffPredsResponse = await axios<PlayoffPredictions>({
+			method: "get",
+			url: `${uri}/prediction/playoff/userId/${userId}/leagueId/${leagueId}`,
+			responseType: "json",
+			withCredentials: true
+		});
+	} catch (e) {
+		throw generateError(e);
+	}
+
+	return playoffPredsResponse.data;
+}
+
+export async function submitPlayoffPredictions(playoffPreds: PlayoffPredictions) {
+    try {
+		await axios<DayPredictions>({
+			method: "put",
+			url: `${uri}/prediction/playoff`,
+			data: playoffPreds,
+			responseType: "json",
+			withCredentials: true
+		});
+	} catch (e) {
+		throw generateError(e);
+	}
 }
