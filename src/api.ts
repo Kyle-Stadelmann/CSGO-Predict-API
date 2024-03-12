@@ -7,6 +7,7 @@ import { generateError } from "./util.js";
 import { DayPredictions } from "./types/prediction.js";
 import { User } from "./types/user.js";
 import { PlayoffPredictions } from "./types/playoff-prediction.js";
+import { Team } from "./types/team.js";
 
 const uri = process.env.REACT_APP_BACKEND_URI;
 
@@ -195,7 +196,7 @@ export async function getPlayoffPredictions(userId: Id, leagueId: Id) {
 
 export async function submitPlayoffPredictions(playoffPreds: PlayoffPredictions) {
     try {
-		await axios<DayPredictions>({
+		await axios<PlayoffPredictions>({
 			method: "put",
 			url: `${uri}/prediction/playoff`,
 			data: playoffPreds,
@@ -205,4 +206,17 @@ export async function submitPlayoffPredictions(playoffPreds: PlayoffPredictions)
 	} catch (e) {
 		throw generateError(e);
 	}
+}
+
+export async function getLeagueTeams(leagueId: Id) {
+    try {
+        await axios<Team[]>({
+            method: "get",
+            url: `${uri}/league/id/${leagueId}/teams`,
+            responseType: "json",
+            withCredentials: true
+        });
+    } catch (e) {
+        throw generateError(e);
+    }
 }
