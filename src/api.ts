@@ -209,8 +209,9 @@ export async function submitPlayoffPredictions(playoffPreds: PlayoffPredictions)
 }
 
 export async function getLeagueTeams(leagueId: Id) {
+    let leagueTeamsResponse: AxiosResponse<Team[]>;
     try {
-        await axios<Team[]>({
+        leagueTeamsResponse = await axios<Team[]>({
             method: "get",
             url: `${uri}/league/id/${leagueId}/teams`,
             responseType: "json",
@@ -219,4 +220,6 @@ export async function getLeagueTeams(leagueId: Id) {
     } catch (e) {
         throw generateError(e);
     }
+
+    return leagueTeamsResponse.data;
 }
