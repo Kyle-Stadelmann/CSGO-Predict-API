@@ -153,12 +153,12 @@ function getUserDayScoresMap(
 
 	userDayScores.forEach((apiUserDayScore) => {
 		const userDayScore: EnrichedLeague.UserLeagueDayResults = {
-			userId: apiUserDayScore.userId,
+			userId: apiUserDayScore.user.id,
 			dayNumber: apiUserDayScore.dayNumber,
 			dayScore: apiUserDayScore.dayScore,
 			predictions: getPredictionsMap(apiUserDayScore.predictions),
 		};
-		usm.set(apiUserDayScore.userId, userDayScore);
+		usm.set(apiUserDayScore.user.id, userDayScore);
 	});
 
 	return usm;
