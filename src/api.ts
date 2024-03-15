@@ -165,6 +165,7 @@ function enrichLeague(league: ApiLeague.League): EnrichedLeague.League {
 		daysMap: ldm,
 		userScores: usm,
 		maxScore: league.maxScore,
+		settings: league.settings,
 	};
 
 	return enrichedLeague;

@@ -10,6 +10,7 @@ export interface League {
 	daysMap: Map<number, LeagueDay>; // day number -> LeagueDay
 	userScores: Map<string, number>; // userId -> total score so far
 	maxScore: number;
+	settings: LeagueSettings;
 }
 
 export interface LeagueDay {
@@ -31,4 +32,10 @@ export interface PredictionResult {
 	matchId: Id;
 	predictionTeamId: Id;
 	wasCorrect: boolean;
+}
+
+export interface LeagueSettings {
+	allowMidDayMatches: boolean;
+	allowPlayoffPredictions: boolean;
+	allowDefaultPredictions: boolean;
 }

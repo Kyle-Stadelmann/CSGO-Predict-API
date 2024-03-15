@@ -10,6 +10,7 @@ export interface League {
 	leagueDays: LeagueDay[];
 	userScores: UserScore[];
 	maxScore: number;
+	settings: LeagueSettings;
 }
 
 export interface UserScore {
@@ -36,4 +37,10 @@ export interface PredictionResult {
 	matchId: Id;
 	predictionTeamId: Id;
 	wasCorrect: boolean;
+}
+
+export interface LeagueSettings {
+	allowMidDayMatches: boolean;
+	allowPlayoffPredictions: boolean;
+	allowDefaultPredictions: boolean;
 }
