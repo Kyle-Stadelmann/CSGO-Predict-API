@@ -18,7 +18,7 @@ export async function getLeagueById(leagueId: Id): Promise<EnrichedLeague.League
 			method: "get",
 			url: `${uri}/league/id/${leagueId}`,
 			responseType: "json",
-			withCredentials: true
+			withCredentials: true,
 		});
 	} catch (e) {
 		throw generateError(e);
@@ -34,7 +34,7 @@ export async function getCurrentDayMatches(leagueId: Id): Promise<Match[]> {
 			method: "get",
 			url: `${uri}/match/leagueId/${leagueId}`,
 			responseType: "json",
-			withCredentials: true
+			withCredentials: true,
 		});
 	} catch (e) {
 		throw generateError(e);
@@ -50,7 +50,7 @@ export async function getResultsFromDay(leagueId: Id, day: number): Promise<Matc
 			method: "get",
 			url: `${uri}/match/results/leagueId/${leagueId}/day/${day}`,
 			responseType: "json",
-			withCredentials: true
+			withCredentials: true,
 		});
 	} catch (e) {
 		throw generateError(e);
@@ -66,7 +66,7 @@ export async function submitDayPredictions(dayPreds: DayPredictions) {
 			url: `${uri}/match/predictions`,
 			data: dayPreds,
 			responseType: "json",
-			withCredentials: true
+			withCredentials: true,
 		});
 	} catch (e) {
 		throw generateError(e);
@@ -80,8 +80,8 @@ export async function authPredictionUser(token: string): Promise<User> {
 			method: "post",
 			url: `${uri}/auth/`,
 			responseType: "json",
-			data: {"token": token},
-			withCredentials: true
+			data: { token: token },
+			withCredentials: true,
 		});
 	} catch (e) {
 		throw generateError(e);
@@ -97,7 +97,7 @@ export async function getDayPredictions(userId: string, leagueId: Id) {
 			method: "get",
 			url: `${uri}/match/predictions/userId/${userId}/leagueId/${leagueId}`,
 			responseType: "json",
-			withCredentials: true
+			withCredentials: true,
 		});
 	} catch (e) {
 		throw generateError(e);
@@ -106,16 +106,65 @@ export async function getDayPredictions(userId: string, leagueId: Id) {
 	return dayPredsResponse.data;
 }
 
+export async function getPlayoffPredictions(userId: string, leagueId: Id) {
+	let playoffPredsResponse: AxiosResponse<PlayoffPredictions>;
+	try {
+		playoffPredsResponse = await axios<PlayoffPredictions>({
+			method: "get",
+			url: `${uri}/prediction/playoff/userId/${userId}/leagueId/${leagueId}`,
+			responseType: "json",
+			withCredentials: true,
+		});
+	} catch (e) {
+		throw generateError(e);
+	}
+
+	return playoffPredsResponse.data;
+}
+
+export async function submitPlayoffPredictions(playoffPreds: PlayoffPredictions) {
+	try {
+		await axios<PlayoffPredictions>({
+			method: "put",
+			url: `${uri}/prediction/playoff`,
+			data: playoffPreds,
+			responseType: "json",
+			withCredentials: true,
+		});
+	} catch (e) {
+		throw generateError(e);
+	}
+}
+
+export async function getLeagueTeams(leagueId: Id) {
+	let leagueTeamsResponse: AxiosResponse<Team[]>;
+	try {
+		leagueTeamsResponse = await axios<Team[]>({
+			method: "get",
+			url: `${uri}/league/id/${leagueId}/teams`,
+			responseType: "json",
+			withCredentials: true,
+		});
+	} catch (e) {
+		throw generateError(e);
+	}
+
+	return leagueTeamsResponse.data;
+}
+
 function enrichLeague(league: ApiLeague.League): EnrichedLeague.League {
 	const ldm = getLeagueDaysMap(league.leagueDays);
 	const usm = getUserTotalScoresMap(league.userScores);
 
 	const enrichedLeague: EnrichedLeague.League = {
 		id: league.id,
+		name: league.name,
 		tournamentId: league.tournamentId,
+		tournamentName: league.tournamentName,
 		finished: league.finished,
 		daysMap: ldm,
 		userScores: usm,
+		maxScore: league.maxScore,
 	};
 
 	return enrichedLeague;
@@ -153,9 +202,10 @@ function getUserDayScoresMap(
 
 	userDayScores.forEach((apiUserDayScore) => {
 		const userDayScore: EnrichedLeague.UserLeagueDayResults = {
-			userId: apiUserDayScore.user.id,
+			user: apiUserDayScore.user,
 			dayNumber: apiUserDayScore.dayNumber,
 			dayScore: apiUserDayScore.dayScore,
+			runningDayScore: apiUserDayScore.runningDayScore,
 			predictions: getPredictionsMap(apiUserDayScore.predictions),
 		};
 		usm.set(apiUserDayScore.user.id, userDayScore);
@@ -171,55 +221,11 @@ function getLeagueDaysMap(leagueDays: ApiLeague.LeagueDay[]): Map<number, Enrich
 		const leagueDay: EnrichedLeague.LeagueDay = {
 			day: apiLeagueDay.day,
 			userScores: getUserDayScoresMap(apiLeagueDay.userDayScores),
+			maxScore: apiLeagueDay.maxScore,
+			maxRunningDayScore: apiLeagueDay.maxRunningDayScore,
 		};
 		ldm.set(apiLeagueDay.day, leagueDay);
 	});
 
 	return ldm;
-}
-
-export async function getPlayoffPredictions(userId: string, leagueId: Id) {
-    let playoffPredsResponse: AxiosResponse<PlayoffPredictions>;
-	try {
-		playoffPredsResponse = await axios<PlayoffPredictions>({
-			method: "get",
-			url: `${uri}/prediction/playoff/userId/${userId}/leagueId/${leagueId}`,
-			responseType: "json",
-			withCredentials: true
-		});
-	} catch (e) {
-		throw generateError(e);
-	}
-
-	return playoffPredsResponse.data;
-}
-
-export async function submitPlayoffPredictions(playoffPreds: PlayoffPredictions) {
-    try {
-		await axios<PlayoffPredictions>({
-			method: "put",
-			url: `${uri}/prediction/playoff`,
-			data: playoffPreds,
-			responseType: "json",
-			withCredentials: true
-		});
-	} catch (e) {
-		throw generateError(e);
-	}
-}
-
-export async function getLeagueTeams(leagueId: Id) {
-    let leagueTeamsResponse: AxiosResponse<Team[]>;
-    try {
-        leagueTeamsResponse = await axios<Team[]>({
-            method: "get",
-            url: `${uri}/league/id/${leagueId}/teams`,
-            responseType: "json",
-            withCredentials: true
-        });
-    } catch (e) {
-        throw generateError(e);
-    }
-
-    return leagueTeamsResponse.data;
 }
