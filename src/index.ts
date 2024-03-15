@@ -4,5 +4,6 @@ export * from "./types/match-result.js";
 export * from "./types/prediction.js";
 export * from "./types/team.js";
 export * from "./types/user.js";
+export * from "./types/playoff-prediction.js";
 
 export * from "./api.js";

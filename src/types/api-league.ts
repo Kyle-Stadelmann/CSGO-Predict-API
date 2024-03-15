@@ -1,11 +1,15 @@
 import { Id } from "./id.js";
+import { User } from "./user.js";
 
 export interface League {
 	id: Id;
+	name: string;
 	tournamentId: Id;
+	tournamentName: string;
 	finished: boolean;
 	leagueDays: LeagueDay[];
 	userScores: UserScore[];
+	maxScore: number;
 }
 
 export interface UserScore {
@@ -13,16 +17,18 @@ export interface UserScore {
 	score: number;
 }
 
-// Note: day 2 currently hardcoded as a skipped day since it would require mid day predictions
 export interface LeagueDay {
 	day: number;
 	userDayScores: UserLeagueDayResults[];
+	maxScore: number;
+	maxRunningDayScore: number;
 }
 
 export interface UserLeagueDayResults {
-	userId: string;
+	user: User;
 	dayNumber: number;
 	dayScore: number;
+	runningDayScore: number;
 	predictions: PredictionResult[];
 }
 
