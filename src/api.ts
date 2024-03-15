@@ -178,7 +178,7 @@ function getLeagueDaysMap(leagueDays: ApiLeague.LeagueDay[]): Map<number, Enrich
 	return ldm;
 }
 
-export async function getPlayoffPredictions(userId: Id, leagueId: Id) {
+export async function getPlayoffPredictions(userId: string, leagueId: Id) {
     let playoffPredsResponse: AxiosResponse<PlayoffPredictions>;
 	try {
 		playoffPredsResponse = await axios<PlayoffPredictions>({
