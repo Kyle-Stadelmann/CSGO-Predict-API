@@ -36,6 +36,7 @@ export async function getCurrentDayMatches(leagueId: Id): Promise<Match[]> {
 			responseType: "json",
 			withCredentials: true,
 		});
+		currentDayResponse.data.forEach((m) => (m.date = new Date(m.date)));
 	} catch (e) {
 		throw generateError(e);
 	}
@@ -52,6 +53,7 @@ export async function getResultsFromDay(leagueId: Id, day: number): Promise<Matc
 			responseType: "json",
 			withCredentials: true,
 		});
+		resultsResponse.data.forEach((m) => (m.date = new Date(m.date)));
 	} catch (e) {
 		throw generateError(e);
 	}
@@ -99,6 +101,7 @@ export async function getDayPredictions(userId: string, leagueId: Id): Promise<D
 			responseType: "json",
 			withCredentials: true,
 		});
+		dayPredsResponse.data.date = new Date(dayPredsResponse.data.date);
 	} catch (e: any) {
 		if (e.response?.status === 404) {
 			return undefined;
@@ -118,6 +121,7 @@ export async function getPlayoffPredictions(userId: string, leagueId: Id): Promi
 			responseType: "json",
 			withCredentials: true,
 		});
+		playoffPredsResponse.data.date = new Date(playoffPredsResponse.data.date);
 	} catch (e: any) {
 		if (e.response?.status === 404) {
 			return undefined;
