@@ -90,7 +90,7 @@ export async function authPredictionUser(token: string): Promise<User> {
 	return authResponse.data;
 }
 
-export async function getDayPredictions(userId: string, leagueId: Id) {
+export async function getDayPredictions(userId: string, leagueId: Id): Promise<DayPredictions | undefined> {
 	let dayPredsResponse: AxiosResponse<DayPredictions>;
 	try {
 		dayPredsResponse = await axios<DayPredictions>({
@@ -99,14 +99,17 @@ export async function getDayPredictions(userId: string, leagueId: Id) {
 			responseType: "json",
 			withCredentials: true,
 		});
-	} catch (e) {
+	} catch (e: any) {
+		if (e.response?.status === 404) {
+			return undefined;
+		}
 		throw generateError(e);
 	}
 
 	return dayPredsResponse.data;
 }
 
-export async function getPlayoffPredictions(userId: string, leagueId: Id) {
+export async function getPlayoffPredictions(userId: string, leagueId: Id): Promise<PlayoffPredictions | undefined> {
 	let playoffPredsResponse: AxiosResponse<PlayoffPredictions>;
 	try {
 		playoffPredsResponse = await axios<PlayoffPredictions>({
@@ -115,7 +118,10 @@ export async function getPlayoffPredictions(userId: string, leagueId: Id) {
 			responseType: "json",
 			withCredentials: true,
 		});
-	} catch (e) {
+	} catch (e: any) {
+		if (e.response?.status === 404) {
+			return undefined;
+		}
 		throw generateError(e);
 	}
 
