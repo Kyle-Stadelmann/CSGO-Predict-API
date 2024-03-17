@@ -181,11 +181,11 @@ function enrichLeague(league: ApiLeague.League): EnrichedLeague.League {
 	return enrichedLeague;
 }
 
-function getUserTotalScoresMap(userScores: ApiLeague.UserScore[]): Map<string, number> {
-	const usm = new Map<string, number>();
+function getUserTotalScoresMap(userScores: ApiLeague.UserScore[]): Map<User, number> {
+	const usm = new Map<User, number>();
 
 	userScores.forEach((us) => {
-		usm.set(us.userId, us.score);
+		usm.set(us.user, us.score);
 	});
 
 	return usm;

@@ -14,7 +14,7 @@ export interface League {
 }
 
 export interface UserScore {
-	userId: string;
+	user: User;
 	score: number;
 }
 

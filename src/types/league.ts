@@ -8,7 +8,7 @@ export interface League {
 	tournamentName: string;
 	finished: boolean;
 	daysMap: Map<number, LeagueDay>; // day number -> LeagueDay
-	userScores: Map<string, number>; // userId -> total score so far
+	userScores: Map<User, number>; // user -> total score so far
 	maxScore: number;
 	settings: LeagueSettings;
 }
