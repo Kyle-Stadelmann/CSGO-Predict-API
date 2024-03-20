@@ -84,6 +84,7 @@ export async function authPredictionUser(token: string): Promise<User> {
 			url: `${uri}/auth/`,
 			responseType: "json",
 			data: { token: token },
+			withCredentials: true,
 		});
 	} catch (e) {
 		throw generateError(e);
@@ -170,7 +171,6 @@ export async function getUsersToRemind(leagueId: Id, password: string) {
 			url: `${uri}/reminder/voting/leagueId/${leagueId}`,
 			data: { password: password },
 			responseType: "json",
-			withCredentials: true,
 		});
 	} catch (e) {
 		throw generateError(e);
