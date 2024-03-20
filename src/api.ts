@@ -8,6 +8,7 @@ import { DayPredictions } from "./types/prediction.js";
 import { User } from "./types/user.js";
 import { PlayoffPredictions } from "./types/playoff-prediction.js";
 import { Team } from "./types/team.js";
+import { Reminder } from "./types/reminder.js";
 
 const uri = process.env.REACT_APP_BACKEND_URI;
 
@@ -83,7 +84,6 @@ export async function authPredictionUser(token: string): Promise<User> {
 			url: `${uri}/auth/`,
 			responseType: "json",
 			data: { token: token },
-			withCredentials: true,
 		});
 	} catch (e) {
 		throw generateError(e);
@@ -160,6 +160,23 @@ export async function getLeagueTeams(leagueId: Id) {
 	}
 
 	return leagueTeamsResponse.data;
+}
+
+export async function getUsersToRemind(leagueId: Id, password: string) {
+	let reminderResponse: AxiosResponse<Reminder>;
+	try {
+		reminderResponse = await axios<Reminder>({
+			method: "get",
+			url: `${uri}/reminder/voting/leagueId/${leagueId}`,
+			data: { password: password },
+			responseType: "json",
+			withCredentials: true,
+		});
+	} catch (e) {
+		throw generateError(e);
+	}
+
+	return reminderResponse.data;
 }
 
 function enrichLeague(league: ApiLeague.League): EnrichedLeague.League {
