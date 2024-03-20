@@ -169,7 +169,7 @@ export async function getUsersToRemind(leagueId: Id, password: string) {
 		reminderResponse = await axios<Reminder>({
 			method: "get",
 			url: `${uri}/reminder/voting/leagueId/${leagueId}`,
-			data: { password: password },
+			auth: { username: "", password: password },
 			responseType: "json",
 		});
 
