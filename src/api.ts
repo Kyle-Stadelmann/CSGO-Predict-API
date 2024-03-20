@@ -172,6 +172,8 @@ export async function getUsersToRemind(leagueId: Id, password: string) {
 			data: { password: password },
 			responseType: "json",
 		});
+
+		reminderResponse.data.firstMatchDate = new Date(reminderResponse.data.firstMatchDate);
 	} catch (e) {
 		throw generateError(e);
 	}
