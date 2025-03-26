@@ -9,15 +9,16 @@ import { User } from "./types/user.js";
 import { PlayoffPredictions } from "./types/playoff-prediction.js";
 import { Team } from "./types/team.js";
 import { Reminder } from "./types/reminder.js";
+import { AuthResponse } from "./types/auth-response.js";
 
-const uri = process.env.REACT_APP_BACKEND_URI;
+const url = process.env.BACKEND_URL;
 
 export async function getLeagueById(leagueId: Id): Promise<EnrichedLeague.League> {
 	let leagueResponse: AxiosResponse<ApiLeague.League>;
 	try {
 		leagueResponse = await axios<ApiLeague.League>({
 			method: "get",
-			url: `${uri}/league/id/${leagueId}`,
+			url: `${url}/league/id/${leagueId}`,
 			responseType: "json",
 			withCredentials: true,
 		});
@@ -33,7 +34,7 @@ export async function getCurrentDayMatches(leagueId: Id): Promise<Match[]> {
 	try {
 		currentDayResponse = await axios<Match[]>({
 			method: "get",
-			url: `${uri}/match/leagueId/${leagueId}`,
+			url: `${url}/match/leagueId/${leagueId}`,
 			responseType: "json",
 			withCredentials: true,
 		});
@@ -50,7 +51,7 @@ export async function getResultsFromDay(leagueId: Id, day: number): Promise<Matc
 	try {
 		resultsResponse = await axios<MatchResult[]>({
 			method: "get",
-			url: `${uri}/match/results/leagueId/${leagueId}/day/${day}`,
+			url: `${url}/match/results/leagueId/${leagueId}/day/${day}`,
 			responseType: "json",
 			withCredentials: true,
 		});
@@ -66,7 +67,7 @@ export async function submitDayPredictions(dayPreds: DayPredictions) {
 	try {
 		await axios<DayPredictions>({
 			method: "put",
-			url: `${uri}/match/predictions`,
+			url: `${url}/match/predictions`,
 			data: dayPreds,
 			responseType: "json",
 			withCredentials: true,
@@ -76,12 +77,12 @@ export async function submitDayPredictions(dayPreds: DayPredictions) {
 	}
 }
 
-export async function authPredictionUser(token: string): Promise<User> {
-	let authResponse: AxiosResponse<User>;
+export async function authPredictionUser(token: string): Promise<AuthResponse> {
+	let authResponse: AxiosResponse<AuthResponse>;
 	try {
-		authResponse = await axios<User>({
+		authResponse = await axios<AuthResponse>({
 			method: "post",
-			url: `${uri}/auth/`,
+			url: `${url}/auth/`,
 			responseType: "json",
 			data: { token: token },
 			withCredentials: true,
@@ -98,7 +99,7 @@ export async function getDayPredictions(userId: string, leagueId: Id): Promise<D
 	try {
 		dayPredsResponse = await axios<DayPredictions>({
 			method: "get",
-			url: `${uri}/match/predictions/userId/${userId}/leagueId/${leagueId}`,
+			url: `${url}/match/predictions/userId/${userId}/leagueId/${leagueId}`,
 			responseType: "json",
 			withCredentials: true,
 		});
@@ -118,7 +119,7 @@ export async function getPlayoffPredictions(userId: string, leagueId: Id): Promi
 	try {
 		playoffPredsResponse = await axios<PlayoffPredictions>({
 			method: "get",
-			url: `${uri}/prediction/playoff/userId/${userId}/leagueId/${leagueId}`,
+			url: `${url}/prediction/playoff/userId/${userId}/leagueId/${leagueId}`,
 			responseType: "json",
 			withCredentials: true,
 		});
@@ -137,7 +138,7 @@ export async function submitPlayoffPredictions(playoffPreds: PlayoffPredictions)
 	try {
 		await axios<PlayoffPredictions>({
 			method: "put",
-			url: `${uri}/prediction/playoff`,
+			url: `${url}/prediction/playoff`,
 			data: playoffPreds,
 			responseType: "json",
 			withCredentials: true,
@@ -152,7 +153,7 @@ export async function getLeagueTeams(leagueId: Id) {
 	try {
 		leagueTeamsResponse = await axios<Team[]>({
 			method: "get",
-			url: `${uri}/league/id/${leagueId}/teams`,
+			url: `${url}/league/id/${leagueId}/teams`,
 			responseType: "json",
 			withCredentials: true,
 		});
@@ -168,7 +169,7 @@ export async function getUsersToRemind(leagueId: Id, password: string) {
 	try {
 		reminderResponse = await axios<Reminder>({
 			method: "get",
-			url: `${uri}/reminder/voting/leagueId/${leagueId}`,
+			url: `${url}/reminder/voting/leagueId/${leagueId}`,
 			auth: { username: "", password: password },
 			responseType: "json",
 		});
