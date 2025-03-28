@@ -14,7 +14,7 @@ import { LeagueSummary } from "./types/league.js";
 
 const url = process.env.BACKEND_URL;
 
-export async function getLeaguesForUser(userId: Id, backendToken: string): Promise<LeagueSummary[]> {
+export async function getLeaguesForUser(userId: string, backendToken: string): Promise<LeagueSummary[]> {
 	let leaguesResponse: AxiosResponse<LeagueSummary[]>;
 	try {
 		leaguesResponse = await axios<LeagueSummary[]>({
@@ -24,6 +24,9 @@ export async function getLeaguesForUser(userId: Id, backendToken: string): Promi
 			headers: {
 				Authorization: `Bearer ${backendToken}`,
 			},
+		});
+		leaguesResponse.data.forEach((l) => {
+			l.startDate = new Date(l.startDate);
 		});
 	} catch (e) {
 		throw generateError(e);
