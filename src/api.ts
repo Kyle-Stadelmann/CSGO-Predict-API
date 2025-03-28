@@ -13,14 +13,16 @@ import { AuthResponse } from "./types/auth-response.js";
 
 const url = process.env.BACKEND_URL;
 
-export async function getLeagueById(leagueId: Id): Promise<EnrichedLeague.League> {
+export async function getLeagueById(leagueId: Id, backendToken: string): Promise<EnrichedLeague.League> {
 	let leagueResponse: AxiosResponse<ApiLeague.League>;
 	try {
 		leagueResponse = await axios<ApiLeague.League>({
 			method: "get",
 			url: `${url}/league/id/${leagueId}`,
 			responseType: "json",
-			withCredentials: true,
+			headers: {
+				Authorization: `Bearer ${backendToken}`,
+			},
 		});
 	} catch (e) {
 		throw generateError(e);
@@ -29,14 +31,16 @@ export async function getLeagueById(leagueId: Id): Promise<EnrichedLeague.League
 	return enrichLeague(leagueResponse.data);
 }
 
-export async function getCurrentDayMatches(leagueId: Id): Promise<Match[]> {
+export async function getCurrentDayMatches(leagueId: Id, backendToken: string): Promise<Match[]> {
 	let currentDayResponse: AxiosResponse<Match[]>;
 	try {
 		currentDayResponse = await axios<Match[]>({
 			method: "get",
 			url: `${url}/match/leagueId/${leagueId}`,
 			responseType: "json",
-			withCredentials: true,
+			headers: {
+				Authorization: `Bearer ${backendToken}`,
+			},
 		});
 		currentDayResponse.data.forEach((m) => (m.date = new Date(m.date)));
 	} catch (e) {
@@ -46,14 +50,16 @@ export async function getCurrentDayMatches(leagueId: Id): Promise<Match[]> {
 	return currentDayResponse.data;
 }
 
-export async function getResultsFromDay(leagueId: Id, day: number): Promise<MatchResult[]> {
+export async function getResultsFromDay(leagueId: Id, day: number, backendToken: string): Promise<MatchResult[]> {
 	let resultsResponse: AxiosResponse<MatchResult[]>;
 	try {
 		resultsResponse = await axios<MatchResult[]>({
 			method: "get",
 			url: `${url}/match/results/leagueId/${leagueId}/day/${day}`,
 			responseType: "json",
-			withCredentials: true,
+			headers: {
+				Authorization: `Bearer ${backendToken}`,
+			},
 		});
 		resultsResponse.data.forEach((m) => (m.date = new Date(m.date)));
 	} catch (e) {
@@ -63,14 +69,16 @@ export async function getResultsFromDay(leagueId: Id, day: number): Promise<Matc
 	return resultsResponse.data;
 }
 
-export async function submitDayPredictions(dayPreds: DayPredictions) {
+export async function submitDayPredictions(dayPreds: DayPredictions, backendToken: string) {
 	try {
 		await axios<DayPredictions>({
 			method: "put",
 			url: `${url}/match/predictions`,
 			data: dayPreds,
 			responseType: "json",
-			withCredentials: true,
+			headers: {
+				Authorization: `Bearer ${backendToken}`,
+			},
 		});
 	} catch (e) {
 		throw generateError(e);
@@ -85,7 +93,6 @@ export async function authPredictionUser(token: string): Promise<AuthResponse> {
 			url: `${url}/auth/`,
 			responseType: "json",
 			data: { token: token },
-			withCredentials: true,
 		});
 	} catch (e) {
 		throw generateError(e);
@@ -94,14 +101,20 @@ export async function authPredictionUser(token: string): Promise<AuthResponse> {
 	return authResponse.data;
 }
 
-export async function getDayPredictions(userId: string, leagueId: Id): Promise<DayPredictions | undefined> {
+export async function getDayPredictions(
+	userId: string,
+	leagueId: Id,
+	backendToken: string
+): Promise<DayPredictions | undefined> {
 	let dayPredsResponse: AxiosResponse<DayPredictions>;
 	try {
 		dayPredsResponse = await axios<DayPredictions>({
 			method: "get",
 			url: `${url}/match/predictions/userId/${userId}/leagueId/${leagueId}`,
 			responseType: "json",
-			withCredentials: true,
+			headers: {
+				Authorization: `Bearer ${backendToken}`,
+			},
 		});
 		dayPredsResponse.data.date = new Date(dayPredsResponse.data.date);
 	} catch (e: any) {
@@ -114,14 +127,20 @@ export async function getDayPredictions(userId: string, leagueId: Id): Promise<D
 	return dayPredsResponse.data;
 }
 
-export async function getPlayoffPredictions(userId: string, leagueId: Id): Promise<PlayoffPredictions | undefined> {
+export async function getPlayoffPredictions(
+	userId: string,
+	leagueId: Id,
+	backendToken: string
+): Promise<PlayoffPredictions | undefined> {
 	let playoffPredsResponse: AxiosResponse<PlayoffPredictions>;
 	try {
 		playoffPredsResponse = await axios<PlayoffPredictions>({
 			method: "get",
 			url: `${url}/prediction/playoff/userId/${userId}/leagueId/${leagueId}`,
 			responseType: "json",
-			withCredentials: true,
+			headers: {
+				Authorization: `Bearer ${backendToken}`,
+			},
 		});
 		playoffPredsResponse.data.date = new Date(playoffPredsResponse.data.date);
 	} catch (e: any) {
@@ -134,28 +153,32 @@ export async function getPlayoffPredictions(userId: string, leagueId: Id): Promi
 	return playoffPredsResponse.data;
 }
 
-export async function submitPlayoffPredictions(playoffPreds: PlayoffPredictions) {
+export async function submitPlayoffPredictions(playoffPreds: PlayoffPredictions, backendToken: string) {
 	try {
 		await axios<PlayoffPredictions>({
 			method: "put",
 			url: `${url}/prediction/playoff`,
 			data: playoffPreds,
 			responseType: "json",
-			withCredentials: true,
+			headers: {
+				Authorization: `Bearer ${backendToken}`,
+			},
 		});
 	} catch (e) {
 		throw generateError(e);
 	}
 }
 
-export async function getLeagueTeams(leagueId: Id) {
+export async function getLeagueTeams(leagueId: Id, backendToken: string) {
 	let leagueTeamsResponse: AxiosResponse<Team[]>;
 	try {
 		leagueTeamsResponse = await axios<Team[]>({
 			method: "get",
 			url: `${url}/league/id/${leagueId}/teams`,
 			responseType: "json",
-			withCredentials: true,
+			headers: {
+				Authorization: `Bearer ${backendToken}`,
+			},
 		});
 	} catch (e) {
 		throw generateError(e);

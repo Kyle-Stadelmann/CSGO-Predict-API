@@ -6,5 +6,6 @@ export * from "./types/team.js";
 export * from "./types/user.js";
 export * from "./types/playoff-prediction.js";
 export * from "./types/reminder.js";
+export * from "./types/auth-response.js";
 
 export * from "./api.js";
