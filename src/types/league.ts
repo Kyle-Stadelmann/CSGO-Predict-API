@@ -1,11 +1,23 @@
 import { Id } from "./id.js";
+import { Team } from "./team.js";
 import { User } from "./user.js";
+
+export interface LeagueSummary {
+	id: Id;
+	name: string;
+	tournamentId: Id;
+	tournamentName: string;
+	startDate: Date;
+	finished: boolean;
+	settings: LeagueSettings;
+}
 
 export interface League {
 	id: Id;
 	name: string;
 	tournamentId: Id;
 	tournamentName: string;
+	teams: Map<Id, Team>; // teamId -> Team
 	finished: boolean;
 	daysMap: Map<number, LeagueDay>; // day number -> LeagueDay
 	userScores: Map<User, number>; // user -> total score so far

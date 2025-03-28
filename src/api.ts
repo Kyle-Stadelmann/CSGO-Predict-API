@@ -10,8 +10,27 @@ import { PlayoffPredictions } from "./types/playoff-prediction.js";
 import { Team } from "./types/team.js";
 import { Reminder } from "./types/reminder.js";
 import { AuthResponse } from "./types/auth-response.js";
+import { LeagueSummary } from "./types/league.js";
 
 const url = process.env.BACKEND_URL;
+
+export async function getLeaguesForUser(userId: Id, backendToken: string): Promise<LeagueSummary[]> {
+	let leaguesResponse: AxiosResponse<LeagueSummary[]>;
+	try {
+		leaguesResponse = await axios<LeagueSummary[]>({
+			method: "get",
+			url: `${url}/league/userId/${userId}`,
+			responseType: "json",
+			headers: {
+				Authorization: `Bearer ${backendToken}`,
+			},
+		});
+	} catch (e) {
+		throw generateError(e);
+	}
+
+	return leaguesResponse.data;
+}
 
 export async function getLeagueById(leagueId: Id, backendToken: string): Promise<EnrichedLeague.League> {
 	let leagueResponse: AxiosResponse<ApiLeague.League>;
@@ -169,24 +188,6 @@ export async function submitPlayoffPredictions(playoffPreds: PlayoffPredictions,
 	}
 }
 
-export async function getLeagueTeams(leagueId: Id, backendToken: string) {
-	let leagueTeamsResponse: AxiosResponse<Team[]>;
-	try {
-		leagueTeamsResponse = await axios<Team[]>({
-			method: "get",
-			url: `${url}/league/id/${leagueId}/teams`,
-			responseType: "json",
-			headers: {
-				Authorization: `Bearer ${backendToken}`,
-			},
-		});
-	} catch (e) {
-		throw generateError(e);
-	}
-
-	return leagueTeamsResponse.data;
-}
-
 export async function getUsersToRemind(leagueId: Id, password: string) {
 	let reminderResponse: AxiosResponse<Reminder>;
 	try {
@@ -208,12 +209,14 @@ export async function getUsersToRemind(leagueId: Id, password: string) {
 function enrichLeague(league: ApiLeague.League): EnrichedLeague.League {
 	const ldm = getLeagueDaysMap(league.leagueDays);
 	const usm = getUserTotalScoresMap(league.userScores);
+	const tm = getTeamsMap(league.teams);
 
 	const enrichedLeague: EnrichedLeague.League = {
 		id: league.id,
 		name: league.name,
 		tournamentId: league.tournamentId,
 		tournamentName: league.tournamentName,
+		teams: tm,
 		finished: league.finished,
 		daysMap: ldm,
 		userScores: usm,
@@ -232,6 +235,16 @@ function getUserTotalScoresMap(userScores: ApiLeague.UserScore[]): Map<User, num
 	});
 
 	return usm;
+}
+
+function getTeamsMap(teams: Team[]): Map<Id, Team> {
+	const tm = new Map<Id, Team>();
+
+	teams.forEach((team) => {
+		tm.set(team.id, team);
+	});
+
+	return tm;
 }
 
 function getPredictionsMap(predictions: ApiLeague.PredictionResult[]): Map<Id, EnrichedLeague.PredictionResult> {

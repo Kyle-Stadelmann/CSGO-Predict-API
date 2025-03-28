@@ -1,4 +1,5 @@
 import { Id } from "./id.js";
+import { Team } from "./team.js";
 import { User } from "./user.js";
 
 export interface League {
@@ -6,6 +7,7 @@ export interface League {
 	name: string;
 	tournamentId: Id;
 	tournamentName: string;
+	teams: Team[];
 	finished: boolean;
 	leagueDays: LeagueDay[];
 	userScores: UserScore[];
