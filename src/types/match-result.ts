@@ -11,6 +11,7 @@ export interface Match {
 	tournamentId: Id;
 	stars: number;
 	day: number;
+	points: number;
 }
 
 export interface MatchResult extends Match {

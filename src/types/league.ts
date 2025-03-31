@@ -10,6 +10,12 @@ export interface LeagueSummary {
 	startDate: Date;
 	finished: boolean;
 	settings: LeagueSettings;
+	public: boolean;
+}
+
+export interface DetailedLeagueSummary extends LeagueSummary {
+	memberCount: number;
+	creator: User;
 }
 
 export interface League {
