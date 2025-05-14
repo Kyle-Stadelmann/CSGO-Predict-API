@@ -123,16 +123,12 @@ export async function authPredictionUser(token: string): Promise<AuthResponse> {
 	return authResponse.data;
 }
 
-export async function getDayPredictions(
-	userId: string,
-	leagueId: Id,
-	backendToken: string
-): Promise<DayPredictions | undefined> {
+export async function getDayPredictions(leagueId: Id, backendToken: string): Promise<DayPredictions | undefined> {
 	let dayPredsResponse: AxiosResponse<DayPredictions>;
 	try {
 		dayPredsResponse = await axios<DayPredictions>({
 			method: "get",
-			url: `${url}/match/predictions/userId/${userId}/leagueId/${leagueId}`,
+			url: `${url}/match/predictions/leagueId/${leagueId}`,
 			responseType: "json",
 			headers: {
 				Authorization: `Bearer ${backendToken}`,
@@ -150,7 +146,6 @@ export async function getDayPredictions(
 }
 
 export async function getPlayoffPredictions(
-	userId: string,
 	leagueId: Id,
 	backendToken: string
 ): Promise<PlayoffPredictions | undefined> {
@@ -158,7 +153,7 @@ export async function getPlayoffPredictions(
 	try {
 		playoffPredsResponse = await axios<PlayoffPredictions>({
 			method: "get",
-			url: `${url}/prediction/playoff/userId/${userId}/leagueId/${leagueId}`,
+			url: `${url}/prediction/playoff/leagueId/${leagueId}`,
 			responseType: "json",
 			headers: {
 				Authorization: `Bearer ${backendToken}`,
