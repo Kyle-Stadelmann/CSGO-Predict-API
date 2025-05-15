@@ -4,7 +4,7 @@ import * as EnrichedLeague from "./types/league.js";
 import { Match, MatchResult } from "./types/match-result.js";
 import { Id } from "./types/id.js";
 import { generateError } from "./util.js";
-import { DayPredictions } from "./types/prediction.js";
+import { DayPredictions, Prediction } from "./types/prediction.js";
 import { User } from "./types/user.js";
 import { PlayoffPredictions } from "./types/playoff-prediction.js";
 import { Team } from "./types/team.js";
@@ -14,12 +14,12 @@ import { LeagueSummary } from "./types/league.js";
 
 const url = process.env.BACKEND_URL;
 
-export async function getLeaguesForUser(userId: string, backendToken: string): Promise<LeagueSummary[]> {
+export async function getUsersLeagues(backendToken: string): Promise<LeagueSummary[]> {
 	let leaguesResponse: AxiosResponse<LeagueSummary[]>;
 	try {
 		leaguesResponse = await axios<LeagueSummary[]>({
 			method: "get",
-			url: `${url}/league/userId/${userId}`,
+			url: `${url}/leagues`,
 			responseType: "json",
 			headers: {
 				Authorization: `Bearer ${backendToken}`,
@@ -40,7 +40,7 @@ export async function getLeagueById(leagueId: Id, backendToken: string): Promise
 	try {
 		leagueResponse = await axios<ApiLeague.League>({
 			method: "get",
-			url: `${url}/league/id/${leagueId}`,
+			url: `${url}/leagues/id/${leagueId}`,
 			responseType: "json",
 			headers: {
 				Authorization: `Bearer ${backendToken}`,
@@ -91,12 +91,12 @@ export async function getResultsFromDay(leagueId: Id, day: number, backendToken:
 	return resultsResponse.data;
 }
 
-export async function submitDayPredictions(dayPreds: DayPredictions, backendToken: string) {
+export async function submitDayPredictions(leagueId: Id, predictions: Prediction[], backendToken: string) {
 	try {
 		await axios<DayPredictions>({
 			method: "put",
-			url: `${url}/match/predictions`,
-			data: dayPreds,
+			url: `${url}/match/predictions/leagueId/${leagueId}`,
+			data: predictions,
 			responseType: "json",
 			headers: {
 				Authorization: `Bearer ${backendToken}`,
